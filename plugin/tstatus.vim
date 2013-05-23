@@ -112,11 +112,13 @@ function! UpdateStatusLines() "{{{
   endfor
 endfunction "}}}
 
-set statusline=%!MakeActiveStatusLine()
+function! s:Startup()
+  augroup tstatus
+    au!
+    au WinEnter,WinLeave * call UpdateStatusLines()
+  augroup END
+  set statusline=%!MakeActiveStatusLine()
+endfunction
 
-augroup status_line
-  au!
-  au WinEnter,WinLeave * call UpdateStatusLines()
-augroup END
 " }}}
 
