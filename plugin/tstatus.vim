@@ -140,5 +140,10 @@ function! s:Startup()
   set statusline=%!MakeActiveStatusLine()
 endfunction
 
+augroup tstatus_load
+  au!
+  au VimEnter * call s:Startup()
+augroup END
+
 " }}}
 
