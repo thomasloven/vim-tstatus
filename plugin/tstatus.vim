@@ -28,6 +28,26 @@ hi StatLineHLVline cterm=reverse ctermfg=4
 hi StatLineHLVblock cterm=reverse ctermfg=13
 " }}}
 
+function! s:CreateColor(name, type, bg, fg)
+  let command = printf('hi tstatus_%s', a:name)
+
+  if len(a:type) > 0 
+    let command = command . printf(' cterm=%s', a:type)
+  else
+    let command = command . ' cterm=NONE'
+  endif
+
+  if len(a:bg) > 0
+    let command = command . printf(' ctermbg=%s', a:bg)
+  endif
+
+  if len(a:fg) > 0
+    let command = command . printf(' ctermfg=%s', a:fg)
+  endif
+
+  echom command
+endfunction
+
 function! MakeInactiveStatusLine(num) "{{{
   let filet = getwinvar(a:num, "&ft")
   let buname = bufname(winbufnr(a:num))
