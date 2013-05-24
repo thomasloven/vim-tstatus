@@ -58,8 +58,9 @@ function! s:CreateColor(color) "{{{
 
 endfunction "}}}
 
-let g:ActiveLine = [['num',['NONE','16','NONE'],0],
-      \ ['git',['NONE','16','NONE'],[['NONE','16','2'],['NONE','16','1']]]
+let g:ActiveLine = [['num', ['NONE','16','NONE'] ,0],
+      \ ['git', ['NONE','16','NONE'], [['NONE','16','2'],['NONE','16','1']]],
+      \ ['filename', ['NONE','16','2'], 0]
       \ ]
 
 function! ParseLine(bufnum, line) "{{{
@@ -72,24 +73,26 @@ function! ParseLine(bufnum, line) "{{{
     let color = segment[1]
 
     if name == 'num'
-
       " Buffer number
+
       let ret .= '%#'. s:CreateColor(color). '#'
-      let ret .= printf("%d:", a:bufnum)
+      let ret .= '%n:'
 
     elseif name == 'git'
-
       " If on a git branch
       " print [branchname]
       " with branchname colored depending on git status
+
       if strlen(fugitive#head())
         let ret .= '%#'. s:CreateColor(color). '#'
         let ret .= '['
 
         let gitcolors = segment[2]
         if strlen(system("git status -s --ignore-submodules=dirty 2>/dev/null"))
+          " Dirty repository
           let gitcolor = gitcolors[1]
         else
+          " Clean repository
           let gitcolor = gitcolors[0]
         endif
 
@@ -99,6 +102,12 @@ function! ParseLine(bufnum, line) "{{{
         let ret .= '%#'. s:CreateColor(color). '#'
         let ret .= ']'
       endif
+
+    elseif name == 'filename'
+      " Filename
+
+      let ret .= '%#'. s:CreateColor(color). '#'
+      let ret .= '%< %f'
 
     endif
 
@@ -190,7 +199,7 @@ function! UpdateStatusLines() "{{{
   endfor
 endfunction "}}}
 
-function! UpdateStatusLines2()
+function! UpdateStatusLines2() " {{{
 
   for i in range(1, winnr('$'))
     if(i == winnr())
@@ -199,7 +208,7 @@ function! UpdateStatusLines2()
       call setwinvar(i, "&statusline", "%!MakeInactiveStatusLine(".i.")")
     endif
   endfor
-endfunction
+endfunction "}}}
 
 function! s:Startup()
   augroup tstatus
