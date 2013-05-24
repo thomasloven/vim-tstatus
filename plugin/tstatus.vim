@@ -176,12 +176,23 @@ function! UpdateStatusLines() "{{{
   endfor
 endfunction "}}}
 
+function! UpdateStatusLines2()
+
+  for i in range(1, winnr('$'))
+    if(i == winnr())
+     call setwinvar(i, "&statusline", "%!ParseLine(".i.")")
+    else
+      call setwinvar(i, "&statusline", "%!MakeInactiveStatusLine(".i.")")
+    endif
+  endfor
+endfunction
+
 function! s:Startup()
   augroup tstatus
     au!
-    au WinEnter,WinLeave * call UpdateStatusLines()
+    au WinEnter,WinLeave * call UpdateStatusLines2()
   augroup END
-  call UpdateStatusLines()
+  call UpdateStatusLines2()
 endfunction
 
 augroup tstatus_load
