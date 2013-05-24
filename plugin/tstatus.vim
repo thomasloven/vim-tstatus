@@ -59,38 +59,44 @@ let g:ActiveLine = [['num',['NONE','16','NONE'],0],
       \ ['git',['NONE','16','NONE'],[['NONE','16','2'],['NONE','16','1']]]
       \ ]
 
-function! ParseLine(bufnum)
+function! ParseLine(bufnum) "{{{
+
   let ret = ''
+
   for j in range(0, len(g:ActiveLine)-1)
-    let seg = g:ActiveLine[j]
-    let name = seg[0]
-    let clr = seg[1]
+    let segment = g:ActiveLine[j]
+    let name = segment[0]
+    let color = segment[1]
+
     if name == 'num'
-      let ret = ret . '%#'. s:CreateColor(clr[0],clr[1],clr[2]). '#'
+
+      let ret = ret . '%#'. s:CreateColor(color[0],color[1],color[2]). '#'
       let ret = ret . printf("%d:", a:bufnum)
+
     elseif name == 'git'
-      echom 'git'
+
       if strlen(fugitive#head())
-        let ret = ret . '%#'. s:CreateColor(clr[0],clr[1],clr[2]). '#'
+        let ret = ret . '%#'. s:CreateColor(color[0],color[1],color[2]). '#'
         let ret = ret . '['
 
-        let gclrs = seg[2]
+        let gitcolors = segment[2]
         if strlen(system("git status -s --ignore-submodules=dirty 2>/dev/null"))
-          let gclr = gclrs[1]
+          let gitcolor = gitcolors[1]
         else
-          let gclr = gclrs[0]
+          let gitcolor = gitcolors[0]
         endif
 
-        let ret = ret . '%#'. s:CreateColor(gclr[0],gclr[1],gclr[2]). '#'
+        let ret = ret . '%#'. s:CreateColor(gitcolor[0],gitcolor[1],gitcolor[2]). '#'
         let ret = ret . fugitive#head()
-        let ret = ret . '%#'. s:CreateColor(clr[0],clr[1],clr[2]). '#'
+        let ret = ret . '%#'. s:CreateColor(color[0],color[1],color[2]). '#'
         let ret = ret . ']'
       endif
+
     endif
 
   endfor
   return ret
-endfunction
+endfunction "}}}
 
 function! MakeInactiveStatusLine(num) "{{{
   let filet = getwinvar(a:num, "&ft")
