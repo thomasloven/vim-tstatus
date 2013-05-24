@@ -28,24 +28,27 @@ hi StatLineHLVline cterm=reverse ctermfg=4
 hi StatLineHLVblock cterm=reverse ctermfg=13
 " }}}
 
-function! s:CreateColor(type, bg, fg) "{{{
-  let hi_name = printf('tstatus_%s%s%s', a:type, a:bg, a:fg)
+function! s:CreateColor(color) "{{{
+  let type = a:color[0]
+  let bg = a:color[1]
+  let fg = a:color[2]
+  let hi_name = printf('tstatus_%s%s%s', type, bg, fg)
 
   if ! hlexists(hi_name)
     let command = printf('hi %s', hi_name)
 
-    if len(a:type) > 0 
-      let command = command . printf(' cterm=%s', a:type)
+    if len(type) > 0 
+      let command = command . printf(' cterm=%s', type)
     else
       let command = command . ' cterm=NONE'
     endif
 
-    if len(a:bg) > 0
-      let command = command . printf(' ctermbg=%s', a:bg)
+    if len(bg) > 0
+      let command = command . printf(' ctermbg=%s', bg)
     endif
 
-    if len(a:fg) > 0
-      let command = command . printf(' ctermfg=%s', a:fg)
+    if len(fg) > 0
+      let command = command . printf(' ctermfg=%s', fg)
     endif
 
     execute command
@@ -70,13 +73,13 @@ function! ParseLine(bufnum) "{{{
 
     if name == 'num'
 
-      let ret = ret . '%#'. s:CreateColor(color[0],color[1],color[2]). '#'
+      let ret = ret . '%#'. s:CreateColor(color). '#'
       let ret = ret . printf("%d:", a:bufnum)
 
     elseif name == 'git'
 
       if strlen(fugitive#head())
-        let ret = ret . '%#'. s:CreateColor(color[0],color[1],color[2]). '#'
+        let ret = ret . '%#'. s:CreateColor(color). '#'
         let ret = ret . '['
 
         let gitcolors = segment[2]
@@ -86,9 +89,9 @@ function! ParseLine(bufnum) "{{{
           let gitcolor = gitcolors[0]
         endif
 
-        let ret = ret . '%#'. s:CreateColor(gitcolor[0],gitcolor[1],gitcolor[2]). '#'
+        let ret = ret . '%#'. s:CreateColor(gitcolor). '#'
         let ret = ret . fugitive#head()
-        let ret = ret . '%#'. s:CreateColor(color[0],color[1],color[2]). '#'
+        let ret = ret . '%#'. s:CreateColor(color). '#'
         let ret = ret . ']'
       endif
 
