@@ -137,7 +137,7 @@ function! s:Startup()
     au!
     au WinEnter,WinLeave * call UpdateStatusLines()
   augroup END
-  set statusline=%!MakeActiveStatusLine()
+  call UpdateStatusLines()
 endfunction
 
 augroup tstatus_load
