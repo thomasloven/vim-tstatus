@@ -70,6 +70,15 @@ let g:ActiveLineRight = [
       \ ['position', ['reverse', '16', '2'], []]
       \]
 
+let g:tstatus_modeColors = {
+      \ 'normal': ['NONE','16','2'],
+      \ 'insert': ['reverse','16','2'],
+      \ 'replace': ['reverse', '16', '1'],
+      \ 'visual': ['reverse', '16', '6'],
+      \ 'visline': ['reverse', '16', '4'],
+      \ 'visblock': ['reverse', '16', '13'],
+      \ }
+
 function! ParseLine(bufnum, line) "{{{
 
   let ret = ''
@@ -247,15 +256,15 @@ function! BuildStatusLine(num, leftLine, rightLine)
   " Add mode coloring here!
   let mode = mode()
   if mode ==? 'i'
-    let ret .= '%#StatLineHLInsert# Insert'
+    let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['insert']). '# Insert'
   elseif mode ==# 'v'
-    let ret .= '%#StatLineHLV# Visual'
+    let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['visual']). '# Visual'
   elseif mode ==# 'V'
-    let ret .= '%#StatLineHLVLine# Visual line'
+    let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['visline']). '# Visual line'
   elseif mode ==# ''
-    let ret .= '%#StatLineHLVBlock# Visual block'
+    let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['visblock']). '# Visual block'
   elseif mode ==# 'R'
-    let ret .= '%#StatLineHLReplace# Replace'
+    let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['replace']). '# Replace'
   endif
 
   let ret .= '%= '
