@@ -58,26 +58,28 @@ function! s:CreateColor(color) "{{{
 
 endfunction "}}}
 
+let NONE = 'NONE'
+let reverse = 'reverse'
 
 let g:ActiveLineLeft = [
-      \ ['num', ['NONE','16','NONE'] ,[]],
-      \ ['filename', ['NONE','16','2'], []],
-      \ ['statusflags', ['NONE','16','NONE'], [['NONE', '16', '2'], '+', ['NONE','16','1'], '-']]
+      \ ['num', [NONE, 16, NONE] ,[]],
+      \ ['filename', [NONE, 16, 2], []],
+      \ ['statusflags', [NONE, 16, NONE], [[NONE, 16, 2], '+', [NONE, 16, 1], '-']]
       \ ]
 let g:ActiveLineRight = [
-      \ ['filetype', ['NONE', '16', 'NONE'], []],
-      \ ['percent' , ['reverse', '16', '2'], []],
-      \ ['position', ['reverse', '16', '2'], []],
-      \ ['git', ['NONE','16','NONE'], [['NONE','16','2'],['NONE','16','1']]]
+      \ ['filetype', [NONE, 16, NONE], []],
+      \ ['percent' , [reverse, 16, 2], []],
+      \ ['position', [reverse, 16, 2], []],
+      \ ['git', [NONE, 16, NONE], [[NONE, 16, 2],[NONE, 16, 1]]]
       \]
 
 let g:tstatus_modeColors = {
-      \ 'normal': ['NONE','16','2'],
-      \ 'insert': ['reverse','16','2'],
-      \ 'replace': ['reverse', '16', '1'],
-      \ 'visual': ['reverse', '16', '6'],
-      \ 'visline': ['reverse', '16', '4'],
-      \ 'visblock': ['reverse', '16', '13'],
+      \ 'normal': [NONE, 16, 2],
+      \ 'insert': [reverse, 16, 2],
+      \ 'replace': [reverse, 16, 1],
+      \ 'visual': [reverse, 16, 6],
+     \ 'visline': [reverse, 16, 4],
+      \ 'visblock': [reverse, 16, 13],
       \ }
 
 function! ParseLine(bufnum, line) "{{{
