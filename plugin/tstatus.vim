@@ -117,6 +117,19 @@ function! ParseLine(bufnum, line) "{{{
       " Readonly flag
       let ret .= '%r'
 
+    elseif name == 'statusflags'
+      " Modified and readonly flags
+      if or(&modified, !&modifiable)
+        let ret .= '['
+        if !&modifiable
+          let ret .= '%#'. s:CreateColor(segdata[2]). '#'. segdata[3]
+        endif
+        if &modified
+          let ret .= '%#'. s:CreateColor(segdata[0]). '#'. segdata[1]
+        endif
+        let ret .= '%#'. s:CreateColor(color).'#'
+        let ret .= ']'
+      endif
 
 
 
