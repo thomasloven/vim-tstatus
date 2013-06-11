@@ -15,17 +15,6 @@ let g:tstatus_loaded = 1
 " COLORS {{{
 hi StatusLine cterm=NONE ctermbg=16 ctermfg=2
 hi StatusLineNC cterm=NONE ctermbg=16 ctermfg=11
-hi StatLineText cterm=NONE ctermbg=16 ctermfg=NONE
-hi StatLineFN cterm=NONE ctermbg=16 ctermfg=2
-hi StatLinePos cterm=reverse ctermbg=16 ctermfg=2
-hi StatLinePaste cterm=NONE ctermbg=16 ctermfg=1
-hi StatLineGitClean cterm=NONE ctermbg=16 ctermfg=2
-hi StatLineGitDirty cterm=NONE ctermbg=16 ctermfg=1
-hi StatLineHLInsert cterm=reverse ctermfg=2
-hi StatLineHLReplace cterm=reverse ctermfg=1
-hi StatLineHLV cterm=reverse ctermfg=6
-hi StatLineHLVline cterm=reverse ctermfg=4
-hi StatLineHLVblock cterm=reverse ctermfg=13
 " }}}
 
 function! s:CreateColor(color) "{{{
@@ -262,16 +251,6 @@ function! MakeActiveStatusLine() "{{{
   return statLine
 endfunction "}}}
 
-function! UpdateStatusLines() "{{{
-  for i in range(1, winnr('$'))
-    if(i == winnr())
-     call setwinvar(i, "&statusline", "%!MakeActiveStatusLine()")
-    else
-      call setwinvar(i, "&statusline", "%!MakeInactiveStatusLine(".i.")")
-    endif
-  endfor
-endfunction "}}}
-
 function! StatuslineMiddle() "{{{
   let ret = ' '
   " Add mode coloring here!
@@ -310,7 +289,7 @@ function! BuildStatusLine(num, active) "{{{
   return ret
 endfunction "}}}
 
-function! UpdateStatusLines2() " {{{
+function! UpdateStatusLines() " {{{
 
   for i in range(1, winnr('$'))
     if(i == winnr())
@@ -324,9 +303,9 @@ endfunction "}}}
 function! s:Startup()
   augroup tstatus
     au!
-    au WinEnter,WinLeave * call UpdateStatusLines2()
+    au WinEnter,WinLeave * call UpdateStatusLines()
   augroup END
-  call UpdateStatusLines2()
+  call UpdateStatusLines()
 endfunction
 
 augroup tstatus_load
