@@ -60,7 +60,9 @@ endfunction "}}}
 
 let g:ActiveLine = [['num', ['NONE','16','NONE'] ,0],
       \ ['git', ['NONE','16','NONE'], [['NONE','16','2'],['NONE','16','1']]],
-      \ ['filename', ['NONE','16','2'], 0]
+      \ ['filename', ['NONE','16','2'], 0],
+      \ ['modified', ['NONE','16','2']],
+      \ ['readonly', ['NONE','16','1']]
       \ ]
 
 function! ParseLine(bufnum, line) "{{{
@@ -105,6 +107,14 @@ function! ParseLine(bufnum, line) "{{{
     elseif name == 'filename'
       " Filename
       let ret .= '%< %f'
+    
+    elseif name == 'modified'
+      " Modified flag
+      let ret .= '%m'
+
+    elseif name == 'readonly'
+      " Readonly flag
+      let ret .= '%r'
 
     endif
 
