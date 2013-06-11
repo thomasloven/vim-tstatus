@@ -58,16 +58,17 @@ function! s:CreateColor(color) "{{{
 
 endfunction "}}}
 
+
 let g:ActiveLineLeft = [
       \ ['num', ['NONE','16','NONE'] ,[]],
-      \ ['git', ['NONE','16','NONE'], [['NONE','16','2'],['NONE','16','1']]],
       \ ['filename', ['NONE','16','2'], []],
       \ ['statusflags', ['NONE','16','NONE'], [['NONE', '16', '2'], '+', ['NONE','16','1'], '-']]
       \ ]
 let g:ActiveLineRight = [
       \ ['filetype', ['NONE', '16', 'NONE'], []],
       \ ['percent' , ['reverse', '16', '2'], []],
-      \ ['position', ['reverse', '16', '2'], []]
+      \ ['position', ['reverse', '16', '2'], []],
+      \ ['git', ['NONE','16','NONE'], [['NONE','16','2'],['NONE','16','1']]]
       \]
 
 let g:tstatus_modeColors = {
