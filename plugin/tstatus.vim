@@ -61,7 +61,7 @@ endfunction "}}}
 let g:ActiveLine = [['num', ['NONE','16','NONE'] ,[]],
       \ ['git', ['NONE','16','NONE'], [['NONE','16','2'],['NONE','16','1']]],
       \ ['filename', ['NONE','16','2'], []],
-      \ ['modified', ['NONE','16','NONE'], ['NONE','16','1']],
+      \ ['modified', ['NONE','16','NONE'], [['NONE','16','1'], '+']],
       \ ['readonly', ['NONE','16','1'], []]
       \ ]
 
@@ -112,8 +112,8 @@ function! ParseLine(bufnum, line) "{{{
       " Modified flag
       if &modified
         let ret .= '['
-        let ret .= '%#'. s:CreateColor(segdata).'#'
-        let ret .= '%M'
+        let ret .= '%#'. s:CreateColor(segdata[0]).'#'
+        let ret .= segdata[1]
         let ret .= '%#'. s:CreateColor(color).'#'
         let ret .= ']'
       endif
