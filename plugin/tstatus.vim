@@ -212,6 +212,33 @@ function! SpecialLine(bufnum, active) "{{{
 
     let ret .= '%=[TAGBAR]'
   endif
+
+  if ftype == "qf"
+    let colorActive = [NONE, 16, 2]
+    let colInActive = [NONE, NONE, 3]
+    let color = [colInActive, colorActive]
+    let ret = '%#'. s:CreateColor(color[a:active]). '#'
+
+    let ret .= '[Quickfix]'
+  endif
+
+  if ftype == "gundo"
+    let colorActive = [NONE, 16, 2]
+    let colInActive = [NONE, NONE, 3]
+    let color = [colInActive, colorActive]
+    let ret = '%#'. s:CreateColor(color[a:active]). '#'
+
+    let ret .= '[Gundo]'
+  endif
+  if bname == "__Gundo_Preview__"
+    let colorActive = [NONE, 16, 2]
+    let colInActive = [NONE, NONE, 3]
+    let color = [colInActive, colorActive]
+    let ret = '%#'. s:CreateColor(color[a:active]). '#'
+
+    let ret .= '[Gundo preview]'
+  endif
+
   return ret
 endfunction "}}}
 
@@ -332,7 +359,7 @@ endfunction "}}}
 function! s:Startup()
   augroup tstatus
     au!
-    au  BufEnter,BufLeave,BufUnLoad,CmdWinEnter,CmdWinLeave,WinEnter,WinLeave * call UpdateStatusLines()
+    au  BufEnter,BufLeave,BufUnLoad,CmdWinEnter,CmdWinLeave,WinEnter,WinLeave,Filetype * call UpdateStatusLines()
   augroup END
   call UpdateStatusLines()
 endfunction
