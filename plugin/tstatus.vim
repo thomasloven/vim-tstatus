@@ -73,6 +73,14 @@ let g:ActiveLineRight = [
       \ ['git', [NONE, 16, NONE], [[NONE, 16, 2],[NONE, 16, 1]]]
       \]
 
+let g:InactiveLineLeft = [
+      \ ['num', [NONE, NONE, NONE], []],
+      \ ['filename', [NONE, NONE, NONE], []]
+      \]
+let g:InactiveLineRight = [
+      \ ['git', [NONE, NONE, NONE], [[NONE, NONE, 2],[NONE, NONE, 1]]]
+      \]
+
 let g:tstatus_modeColors = {
       \ 'normal': [NONE, 16, 2],
       \ 'insert': [reverse, 16, 2],
@@ -275,11 +283,17 @@ function! StatuslineMiddle() "{{{
 endfunction "}}}
 
 
-function! BuildStatusLine(num, active, leftLine, rightLine) "{{{
-  let ret = ''
-  let ret .= ParseLine(a:num, a:leftLine)
-  let ret .= StatuslineMiddle()
-  let ret .= ParseLine(a:num, a:rightLine)
+function! BuildStatusLine(num, active) "{{{
+    let ret = ''
+  if a:active
+    let ret .= ParseLine(a:num, g:ActiveLineLeft)
+    let ret .= StatuslineMiddle()
+    let ret .= ParseLine(a:num, g:ActiveLineRight)
+  else
+    let ret .= ParseLine(a:num, g:InactiveLineLeft)
+    let ret .= '%='
+    let ret .= ParseLine(a:num, g:InactiveLineRight)
+  endif
   return ret
 endfunction "}}}
 
@@ -287,9 +301,9 @@ function! UpdateStatusLines2() " {{{
 
   for i in range(1, winnr('$'))
     if(i == winnr())
-     call setwinvar(i, "&statusline", "%!BuildStatusLine(".i.", 1, g:ActiveLineLeft, g:ActiveLineRight)")
+     call setwinvar(i, "&statusline", "%!BuildStatusLine(".i.", 1)")
     else
-      call setwinvar(i, "&statusline", "%!MakeInactiveStatusLine(".i.")")
+      call setwinvar(i, "&statusline", "%!BuildStatusLine(".i.", 0)")
     endif
   endfor
 endfunction "}}}
