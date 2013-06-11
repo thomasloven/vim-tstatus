@@ -129,6 +129,10 @@ function! ParseLine(bufnum, line) "{{{
         let ret .= ']'
       endif
 
+    elseif name == 'filetype'
+      " Filetype indicator
+      let ret .= '%y'
+
 
 
     endif
