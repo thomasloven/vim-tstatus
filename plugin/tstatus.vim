@@ -251,11 +251,8 @@ function! UpdateStatusLines() "{{{
   endfor
 endfunction "}}}
 
-function! BuildStatusLine(num, active, leftLine, rightLine) "{{{
-  let ret = ''
-  let ret .= ParseLine(a:num, a:leftLine)
-
-  let ret .= ' '
+function! StatuslineMiddle() "{{{
+  let ret = ' '
   " Add mode coloring here!
   let mode = mode()
   if mode ==? 'i'
@@ -273,6 +270,15 @@ function! BuildStatusLine(num, active, leftLine, rightLine) "{{{
   endif
 
   let ret .= '%= '
+
+  return ret
+endfunction "}}}
+
+
+function! BuildStatusLine(num, active, leftLine, rightLine) "{{{
+  let ret = ''
+  let ret .= ParseLine(a:num, a:leftLine)
+  let ret .= StatuslineMiddle()
   let ret .= ParseLine(a:num, a:rightLine)
   return ret
 endfunction "}}}
