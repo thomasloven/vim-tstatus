@@ -72,10 +72,10 @@ function! ParseLine(bufnum, line) "{{{
     let name = segment[0]
     let color = segment[1]
 
+    let ret .= '%#'. s:CreateColor(color). '#'
+
     if name == 'num'
       " Buffer number
-
-      let ret .= '%#'. s:CreateColor(color). '#'
       let ret .= '%n:'
 
     elseif name == 'git'
@@ -84,7 +84,6 @@ function! ParseLine(bufnum, line) "{{{
       " with branchname colored depending on git status
 
       if strlen(fugitive#head())
-        let ret .= '%#'. s:CreateColor(color). '#'
         let ret .= '['
 
         let gitcolors = segment[2]
@@ -105,8 +104,6 @@ function! ParseLine(bufnum, line) "{{{
 
     elseif name == 'filename'
       " Filename
-
-      let ret .= '%#'. s:CreateColor(color). '#'
       let ret .= '%< %f'
 
     endif
