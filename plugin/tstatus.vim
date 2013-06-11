@@ -90,6 +90,38 @@ let g:tstatus_modeColors = {
       \ 'visblock': [reverse, 16, 13],
       \ }
 
+function! ParseGit(bufnum, segment) "{{{
+  " If on a git branch
+  " print [branchname]
+  " with branchname colored depending on git status
+
+  let ret = ''
+  let fpath = fnamemodify(bufname(winbufnr(a:bufnum)),":p:h")
+
+  let gitref = system("cd ". fpath. "; git symbolic-ref HEAD 2> /dev/null")
+  let gitref = substitute(gitref, "refs/heads/", "", "")
+  let gitref = substitute(gitref, "\n", "", "")
+
+  if strlen(gitref)
+    let gitstat = system("cd ". fpath. "; git status -s --ignore-submodules=dirty 2>/dev/null")
+
+    let colors = a:segment[2]
+    if strlen(gitstat)
+      let gitcolor = colors[1]
+    else
+      let gitcolor = colors[0]
+    endif
+
+    let ret .= '['
+    let ret .= '%#'. s:CreateColor(gitcolor). '#'
+    let ret .= gitref
+    let ret .= '%#'. s:CreateColor(a:segment[1]). '#'
+    let ret .= ']'
+
+  endif
+  return ret
+endfunction "}}}
+
 function! ParseLine(bufnum, line) "{{{
 
   let ret = ''
@@ -107,27 +139,8 @@ function! ParseLine(bufnum, line) "{{{
       let ret .= '%n:'
 
     elseif name == 'git'
-      " If on a git branch
-      " print [branchname]
-      " with branchname colored depending on git status
+      let ret .= ParseGit(a:bufnum, a:line[j])
 
-      if strlen(fugitive#head())
-        let ret .= '['
-
-        if strlen(system("git status -s --ignore-submodules=dirty 2>/dev/null"))
-          " Dirty repository
-          let gitcolor = segdata[1]
-        else
-          " Clean repository
-          let gitcolor = segdata[0]
-        endif
-
-        let ret .= '%#'. s:CreateColor(gitcolor). '#'
-        let ret .= fugitive#head()
-
-        let ret .= '%#'. s:CreateColor(color). '#'
-        let ret .= ']'
-      endif
 
     elseif name == 'filename'
       " Filename
