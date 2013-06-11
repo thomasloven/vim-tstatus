@@ -103,11 +103,11 @@ let g:ActiveLineRight = [
       \]
 
 let g:InactiveLineLeft = [
-      \ ['num', [NONE, NONE, NONE], []],
-      \ ['filename', [NONE, NONE, NONE], []]
+      \ ['num', [NONE, NONE, 3], []],
+      \ ['filename', [NONE, NONE, 3], []]
       \]
 let g:InactiveLineRight = [
-      \ ['git', [NONE, NONE, NONE], [[NONE, NONE, 2],[NONE, NONE, 1]]]
+      \ ['git', [NONE, NONE, 3], [[NONE, NONE, 2],[NONE, NONE, 1]]]
       \]
 " }}}
 " COLORS {{{
