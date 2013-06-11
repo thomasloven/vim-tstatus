@@ -242,7 +242,23 @@ endfunction "}}}
 function! BuildStatusLine(num, leftLine, rightLine)
   let ret = ''
   let ret .= ParseLine(a:num, a:leftLine)
-  let ret .= '%='
+
+  let ret .= ' '
+  " Add mode coloring here!
+  let mode = mode()
+  if mode ==? 'i'
+    let ret .= '%#StatLineHLInsert# Insert'
+  elseif mode ==# 'v'
+    let ret .= '%#StatLineHLV# Visual'
+  elseif mode ==# 'V'
+    let ret .= '%#StatLineHLVLine# Visual line'
+  elseif mode ==# ''
+    let ret .= '%#StatLineHLVBlock# Visual block'
+  elseif mode ==# 'R'
+    let ret .= '%#StatLineHLReplace# Replace'
+  endif
+
+  let ret .= '%= '
   let ret .= ParseLine(a:num, a:rightLine)
   return ret
 endfunction
