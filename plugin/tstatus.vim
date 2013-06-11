@@ -265,6 +265,8 @@ function! BuildStatusLine(num, leftLine, rightLine)
     let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['visblock']). '# Visual block'
   elseif mode ==# 'R'
     let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['replace']). '# Replace'
+  else
+    let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['normal']). '#'
   endif
 
   let ret .= '%= '
