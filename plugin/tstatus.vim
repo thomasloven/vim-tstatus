@@ -163,6 +163,15 @@ function! SpecialLine(bufnum, active) "{{{
     let ret .= '[Gundo preview]'
   endif
 
+  if ftype == "help"
+    let colorActive = [NONE, 16, 2]
+    let colInActive = [NONE, NONE, 3]
+    let color = [colInActive, colorActive]
+    let ret = '%#'. s:CreateColor(color[a:active]). '#'
+
+    let ret .= '[HELP] %f'
+  endif
+
   return ret
 endfunction "}}}
 
