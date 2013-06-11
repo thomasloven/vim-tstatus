@@ -249,7 +249,7 @@ function! UpdateStatusLines() "{{{
   endfor
 endfunction "}}}
 
-function! BuildStatusLine(num, leftLine, rightLine)
+function! BuildStatusLine(num, active, leftLine, rightLine) "{{{
   let ret = ''
   let ret .= ParseLine(a:num, a:leftLine)
 
@@ -273,13 +273,13 @@ function! BuildStatusLine(num, leftLine, rightLine)
   let ret .= '%= '
   let ret .= ParseLine(a:num, a:rightLine)
   return ret
-endfunction
+endfunction "}}}
 
 function! UpdateStatusLines2() " {{{
 
   for i in range(1, winnr('$'))
     if(i == winnr())
-     call setwinvar(i, "&statusline", "%!BuildStatusLine(".i.", g:ActiveLineLeft, g:ActiveLineRight)")
+     call setwinvar(i, "&statusline", "%!BuildStatusLine(".i.", 1, g:ActiveLineLeft, g:ActiveLineRight)")
     else
       call setwinvar(i, "&statusline", "%!MakeInactiveStatusLine(".i.")")
     endif
