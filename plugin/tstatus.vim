@@ -325,7 +325,7 @@ endfunction "}}}
 function! s:Startup()
   augroup tstatus
     au!
-    au WinEnter,WinLeave * call UpdateStatusLines()
+    au  BufEnter,BufLeave,BufUnLoad,CmdWinEnter,CmdWinLeave,WinEnter,WinLeave * call UpdateStatusLines()
   augroup END
   call UpdateStatusLines()
 endfunction
