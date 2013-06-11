@@ -61,8 +61,6 @@ endfunction "}}}
 let g:ActiveLine = [['num', ['NONE','16','NONE'] ,[]],
       \ ['git', ['NONE','16','NONE'], [['NONE','16','2'],['NONE','16','1']]],
       \ ['filename', ['NONE','16','2'], []],
-      \ ['modified', ['NONE','16','NONE'], [['NONE','16','1'], '+']],
-      \ ['readonly', ['NONE','16','1'], []],
       \ ['statusflags', ['NONE','16','NONE'], [['NONE', '16', '2'], '+', ['NONE','16','1'], '-']]
       \ ]
 
