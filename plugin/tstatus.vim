@@ -9,174 +9,7 @@ endif
 
 let g:tstatus_loaded = 1
 
-
-" STATUS LINE {{{
-
-" COLORS {{{
-hi StatusLine cterm=NONE ctermbg=16 ctermfg=2
-hi StatusLineNC cterm=NONE ctermbg=16 ctermfg=11
-" }}}
-
-function! s:CreateColor(color) "{{{
-  let type = a:color[0]
-  let bg = a:color[1]
-  let fg = a:color[2]
-  let hi_name = printf('tstatus_%s%s%s', type, bg, fg)
-
-  if ! hlexists(hi_name)
-    let command = printf('hi %s', hi_name)
-
-    if len(type) > 0 
-      let command = command . printf(' cterm=%s', type)
-    else
-      let command = command . ' cterm=NONE'
-    endif
-
-    if len(bg) > 0
-      let command = command . printf(' ctermbg=%s', bg)
-    endif
-
-    if len(fg) > 0
-      let command = command . printf(' ctermfg=%s', fg)
-    endif
-
-    execute command
-  endif
-
-  return hi_name
-
-endfunction "}}}
-
-let NONE = 'NONE'
-let reverse = 'reverse'
-
-let g:ActiveLineLeft = [
-      \ ['num', [NONE, 16, NONE] ,[]],
-      \ ['filename', [NONE, 16, 2], []],
-      \ ['statusflags', [NONE, 16, NONE], [[NONE, 16, 2], '+', [NONE, 16, 1], '-']]
-      \ ]
-let g:ActiveLineRight = [
-      \ ['filetype', [NONE, 16, NONE], []],
-      \ ['percent' , [reverse, 16, 2], []],
-      \ ['position', [reverse, 16, 2], []],
-      \ ['git', [NONE, 16, NONE], [[NONE, 16, 2],[NONE, 16, 1]]]
-      \]
-
-let g:InactiveLineLeft = [
-      \ ['num', [NONE, NONE, NONE], []],
-      \ ['filename', [NONE, NONE, NONE], []]
-      \]
-let g:InactiveLineRight = [
-      \ ['git', [NONE, NONE, NONE], [[NONE, NONE, 2],[NONE, NONE, 1]]]
-      \]
-
-let g:tstatus_modeColors = {
-      \ 'normal': [NONE, 16, 2],
-      \ 'insert': [reverse, 16, 2],
-      \ 'replace': [reverse, 16, 1],
-      \ 'visual': [reverse, 16, 6],
-     \ 'visline': [reverse, 16, 4],
-      \ 'visblock': [reverse, 16, 13],
-      \ }
-
-function! ParseGit(bufnum, segment) "{{{
-  " If on a git branch
-  " print [branchname]
-  " with branchname colored depending on git status
-
-  let ret = ''
-  let fpath = fnamemodify(bufname(winbufnr(a:bufnum)),":p:h")
-
-  let gitref = system("cd ". fpath. "; git symbolic-ref HEAD 2> /dev/null")
-  let gitref = substitute(gitref, "refs/heads/", "", "")
-  let gitref = substitute(gitref, "\n", "", "")
-
-  if strlen(gitref)
-    let gitstat = system("cd ". fpath. "; git status -s --ignore-submodules=dirty 2>/dev/null")
-
-    let colors = a:segment[2]
-    if strlen(gitstat)
-      let gitcolor = colors[1]
-    else
-      let gitcolor = colors[0]
-    endif
-
-    let ret .= '['
-    let ret .= '%#'. s:CreateColor(gitcolor). '#'
-    let ret .= gitref
-    let ret .= '%#'. s:CreateColor(a:segment[1]). '#'
-    let ret .= ']'
-
-  endif
-  return ret
-endfunction "}}}
-
-function! ParseLine(bufnum, line) "{{{
-
-  let ret = ''
-
-  for j in range(0, len(a:line)-1)
-    let segment = a:line[j]
-    let name = segment[0]
-    let color = segment[1]
-    let segdata = segment[2]
-
-    let ret .= '%#'. s:CreateColor(color). '#'
-
-    if name == 'num'
-      " Buffer number
-      let ret .= '%n:'
-
-    elseif name == 'git'
-      let ret .= ParseGit(a:bufnum, a:line[j])
-
-
-    elseif name == 'filename'
-      " Filename
-      let ret .= '%< %f'
-    
-    elseif name == 'modified'
-      " Modified flag
-        let ret .= '%m'
-
-    elseif name == 'readonly'
-      " Readonly flag
-      let ret .= '%r'
-
-    elseif name == 'statusflags'
-      " Modified and readonly flags
-      if or(&modified, !&modifiable)
-        let ret .= '['
-        if !&modifiable
-          let ret .= '%#'. s:CreateColor(segdata[2]). '#'. segdata[3]
-        endif
-        if &modified
-          let ret .= '%#'. s:CreateColor(segdata[0]). '#'. segdata[1]
-        endif
-        let ret .= '%#'. s:CreateColor(color).'#'
-        let ret .= ']'
-      endif
-
-    elseif name == 'filetype'
-      " Filetype indicator
-      let ret .= '%y'
-
-    elseif name == 'percent'
-      " Position percent
-      let ret .= '%p%%'
-
-    elseif name == 'position'
-      " Line and collumn
-      let ret .= '(%l:%c)'
-
-
-
-    endif
-
-  endfor
-  return ret
-endfunction "}}}
-
+" Old functions for reference
 function! MakeInactiveStatusLine(num) "{{{
   let filet = getwinvar(a:num, "&ft")
   let buname = bufname(winbufnr(a:num))
@@ -251,9 +84,173 @@ function! MakeActiveStatusLine() "{{{
   return statLine
 endfunction "}}}
 
+
+
+let NONE = 'NONE'
+let reverse = 'reverse'
+
+" LINES {{{
+let g:ActiveLineLeft = [
+      \ ['num', [NONE, 16, NONE] ,[]],
+      \ ['filename', [NONE, 16, 2], []],
+      \ ['statusflags', [NONE, 16, NONE], [[NONE, 16, 2], '+', [NONE, 16, 1], '-']]
+      \ ]
+let g:ActiveLineRight = [
+      \ ['filetype', [NONE, 16, NONE], []],
+      \ ['percent' , [reverse, 16, 2], []],
+      \ ['position', [reverse, 16, 2], []],
+      \ ['git', [NONE, 16, NONE], [[NONE, 16, 2],[NONE, 16, 1]]]
+      \]
+
+let g:InactiveLineLeft = [
+      \ ['num', [NONE, NONE, NONE], []],
+      \ ['filename', [NONE, NONE, NONE], []]
+      \]
+let g:InactiveLineRight = [
+      \ ['git', [NONE, NONE, NONE], [[NONE, NONE, 2],[NONE, NONE, 1]]]
+      \]
+" }}}
+" COLORS {{{
+hi StatusLine cterm=NONE ctermbg=16 ctermfg=2
+hi StatusLineNC cterm=NONE ctermbg=16 ctermfg=11
+
+let g:tstatus_modeColors = {
+      \ 'normal': [NONE, 16, 2],
+      \ 'insert': [reverse, 16, 2],
+      \ 'replace': [reverse, 16, 1],
+      \ 'visual': [reverse, 16, 6],
+     \ 'visline': [reverse, 16, 4],
+      \ 'visblock': [reverse, 16, 13],
+      \ }
+" }}}
+"
+function! s:CreateColor(color) "{{{
+  let type = a:color[0]
+  let bg = a:color[1]
+  let fg = a:color[2]
+  let hi_name = printf('tstatus_%s%s%s', type, bg, fg)
+
+  if ! hlexists(hi_name)
+    let command = printf('hi %s', hi_name)
+
+    if len(type) > 0 
+      let command = command . printf(' cterm=%s', type)
+    else
+      let command = command . ' cterm=NONE'
+    endif
+
+    if len(bg) > 0
+      let command = command . printf(' ctermbg=%s', bg)
+    endif
+
+    if len(fg) > 0
+      let command = command . printf(' ctermfg=%s', fg)
+    endif
+
+    execute command
+  endif
+
+  return hi_name
+
+endfunction "}}}
+
+function! ParseGit(bufnum, segment) "{{{
+  " If on a git branch
+  " print [branchname]
+  " with branchname colored depending on git status
+
+  let ret = ''
+  let fpath = fnamemodify(bufname(winbufnr(a:bufnum)),":p:h")
+
+  let gitref = system("cd ". fpath. "; git symbolic-ref HEAD 2> /dev/null")
+  let gitref = substitute(gitref, "refs/heads/", "", "")
+  let gitref = substitute(gitref, "\n", "", "")
+
+  if strlen(gitref)
+    let gitstat = system("cd ". fpath. "; git status -s --ignore-submodules=dirty 2>/dev/null")
+
+    let colors = a:segment[2]
+    if strlen(gitstat)
+      let gitcolor = colors[1]
+    else
+      let gitcolor = colors[0]
+    endif
+
+    let ret .= '['
+    let ret .= '%#'. s:CreateColor(gitcolor). '#'
+    let ret .= gitref
+    let ret .= '%#'. s:CreateColor(a:segment[1]). '#'
+    let ret .= ']'
+
+  endif
+  return ret
+endfunction "}}}
+
+function! ParseLine(bufnum, line) "{{{
+
+  let ret = ''
+
+  for j in range(0, len(a:line)-1)
+    let segment = a:line[j]
+    let name = segment[0]
+    let color = segment[1]
+    let segdata = segment[2]
+
+    let ret .= '%#'. s:CreateColor(color). '#'
+
+    if name == 'num'
+      " Buffer number
+      let ret .= '%n:'
+
+    elseif name == 'git'
+      let ret .= ParseGit(a:bufnum, a:line[j])
+
+    elseif name == 'filename'
+      " Filename
+      let ret .= '%< %f'
+    
+    elseif name == 'modified'
+      " Modified flag
+        let ret .= '%m'
+
+    elseif name == 'readonly'
+      " Readonly flag
+      let ret .= '%r'
+
+    elseif name == 'statusflags'
+      " Modified and readonly flags
+      if or(&modified, !&modifiable)
+        let ret .= '['
+        if !&modifiable
+          let ret .= '%#'. s:CreateColor(segdata[2]). '#'. segdata[3]
+        endif
+        if &modified
+          let ret .= '%#'. s:CreateColor(segdata[0]). '#'. segdata[1]
+        endif
+        let ret .= '%#'. s:CreateColor(color).'#'
+        let ret .= ']'
+      endif
+
+    elseif name == 'filetype'
+      " Filetype indicator
+      let ret .= '%y'
+
+    elseif name == 'percent'
+      " Position percent
+      let ret .= '%p%%'
+
+    elseif name == 'position'
+      " Line and collumn
+      let ret .= '(%l:%c)'
+
+    endif
+
+  endfor
+  return ret
+endfunction "}}}
+
 function! StatuslineMiddle() "{{{
   let ret = ' '
-  " Add mode coloring here!
   let mode = mode()
   if mode ==? 'i'
     let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['insert']). '# Insert'
@@ -273,7 +270,6 @@ function! StatuslineMiddle() "{{{
 
   return ret
 endfunction "}}}
-
 
 function! BuildStatusLine(num, active) "{{{
     let ret = ''
@@ -313,5 +309,4 @@ augroup tstatus_load
   au VimEnter * call s:Startup()
 augroup END
 
-" }}}
 
