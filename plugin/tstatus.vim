@@ -58,11 +58,15 @@ function! s:CreateColor(color) "{{{
 
 endfunction "}}}
 
-let g:ActiveLine = [['num', ['NONE','16','NONE'] ,[]],
+let g:ActiveLineLeft = [
+      \ ['num', ['NONE','16','NONE'] ,[]],
       \ ['git', ['NONE','16','NONE'], [['NONE','16','2'],['NONE','16','1']]],
       \ ['filename', ['NONE','16','2'], []],
       \ ['statusflags', ['NONE','16','NONE'], [['NONE', '16', '2'], '+', ['NONE','16','1'], '-']]
       \ ]
+let g:ActiveLineRight = [
+      \ ['filetype', ['NONE', '16', 'NONE'], []]
+      \]
 
 function! ParseLine(bufnum, line) "{{{
 
@@ -225,11 +229,19 @@ function! UpdateStatusLines() "{{{
   endfor
 endfunction "}}}
 
+function! BuildStatusLine(num, leftLine, rightLine)
+  let ret = ''
+  let ret .= ParseLine(a:num, a:leftLine)
+  let ret .= '%='
+  let ret .= ParseLine(a:num, a:rightLine)
+  return ret
+endfunction
+
 function! UpdateStatusLines2() " {{{
 
   for i in range(1, winnr('$'))
     if(i == winnr())
-     call setwinvar(i, "&statusline", "%!ParseLine(".i.", g:ActiveLine)")
+     call setwinvar(i, "&statusline", "%!BuildStatusLine(".i.", g:ActiveLineLeft, g:ActiveLineRight)")
     else
       call setwinvar(i, "&statusline", "%!MakeInactiveStatusLine(".i.")")
     endif
