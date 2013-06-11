@@ -58,11 +58,11 @@ function! s:CreateColor(color) "{{{
 
 endfunction "}}}
 
-let g:ActiveLine = [['num', ['NONE','16','NONE'] ,0],
+let g:ActiveLine = [['num', ['NONE','16','NONE'] ,[]],
       \ ['git', ['NONE','16','NONE'], [['NONE','16','2'],['NONE','16','1']]],
-      \ ['filename', ['NONE','16','2'], 0],
-      \ ['modified', ['NONE','16','2']],
-      \ ['readonly', ['NONE','16','1']]
+      \ ['filename', ['NONE','16','2'], []],
+      \ ['modified', ['NONE','16','NONE'], ['NONE','16','1']],
+      \ ['readonly', ['NONE','16','1'], []]
       \ ]
 
 function! ParseLine(bufnum, line) "{{{
@@ -73,6 +73,7 @@ function! ParseLine(bufnum, line) "{{{
     let segment = a:line[j]
     let name = segment[0]
     let color = segment[1]
+    let segdata = segment[2]
 
     let ret .= '%#'. s:CreateColor(color). '#'
 
@@ -88,13 +89,12 @@ function! ParseLine(bufnum, line) "{{{
       if strlen(fugitive#head())
         let ret .= '['
 
-        let gitcolors = segment[2]
         if strlen(system("git status -s --ignore-submodules=dirty 2>/dev/null"))
           " Dirty repository
-          let gitcolor = gitcolors[1]
+          let gitcolor = segdata[1]
         else
           " Clean repository
-          let gitcolor = gitcolors[0]
+          let gitcolor = segdata[0]
         endif
 
         let ret .= '%#'. s:CreateColor(gitcolor). '#'
@@ -110,7 +110,13 @@ function! ParseLine(bufnum, line) "{{{
     
     elseif name == 'modified'
       " Modified flag
-      let ret .= '%m'
+      if &modified
+        let ret .= '['
+        let ret .= '%#'. s:CreateColor(segdata).'#'
+        let ret .= '%M'
+        let ret .= '%#'. s:CreateColor(color).'#'
+        let ret .= ']'
+      endif
 
     elseif name == 'readonly'
       " Readonly flag
