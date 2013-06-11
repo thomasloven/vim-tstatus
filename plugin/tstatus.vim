@@ -65,7 +65,9 @@ let g:ActiveLineLeft = [
       \ ['statusflags', ['NONE','16','NONE'], [['NONE', '16', '2'], '+', ['NONE','16','1'], '-']]
       \ ]
 let g:ActiveLineRight = [
-      \ ['filetype', ['NONE', '16', 'NONE'], []]
+      \ ['filetype', ['NONE', '16', 'NONE'], []],
+      \ ['percent' , ['reverse', '16', '2'], []],
+      \ ['position', ['reverse', '16', '2'], []]
       \]
 
 function! ParseLine(bufnum, line) "{{{
@@ -136,6 +138,14 @@ function! ParseLine(bufnum, line) "{{{
     elseif name == 'filetype'
       " Filetype indicator
       let ret .= '%y'
+
+    elseif name == 'percent'
+      " Position percent
+      let ret .= '%p%%'
+
+    elseif name == 'position'
+      " Line and collumn
+      let ret .= '(%l:%c)'
 
 
 
