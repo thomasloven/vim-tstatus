@@ -122,8 +122,15 @@ let g:tstatus_modeColors = {
      \ 'visline': [reverse, 16, 4],
       \ 'visblock': [reverse, 16, 13],
       \ }
+let g:tstatus_specColors = {
+      \ 'nerdtree': [[NONE, NONE, 2], [NONE, NONE, 2]],
+      \ 'tagbar': [[NONE, NONE, 2], [NONE, NONE, 3]],
+      \ 'quickfix': [NONE, NONE, 3],
+      \ 'gundolist': [NONE, NONE, 3],
+      \ 'gundoprev': [NONE, NONE, 3]
+      \ }
 " }}}
-"
+
 function! s:CreateColor(color) "{{{
   let type = a:color[0]
   let bg = a:color[1]
@@ -183,6 +190,21 @@ function! ParseGit(bufnum, segment) "{{{
     let ret .= ']'
 
   endif
+  return ret
+endfunction "}}}
+
+function! SpecialLine(bufnum, active) "{{{
+  let ftype = getwinvar(a:bufnum, "&ft")
+  let bname = bufname(winbufnr(a:bufnum))
+
+  let ret = ''
+
+  if ftype == "nerdtree"
+    let nerdroot = getbufvar(winbufnr(a:bufnum), "NERDTreeRoot").path.str()
+    let ret = '%#'. s:CreateColor(g:tstatus_specColors['nerdtree'][a:active]). '#'
+    let ret .= substitute(nerdroot, ".*/", "", "")
+  endif
+
   return ret
 endfunction "}}}
 
@@ -272,7 +294,11 @@ function! StatuslineMiddle() "{{{
 endfunction "}}}
 
 function! BuildStatusLine(num, active) "{{{
-    let ret = ''
+  let ret = ''
+  let special = SpecialLine(a:num, a:active)
+  if strlen(special)
+    return special
+  endif
   if a:active
     let ret .= ParseLine(a:num, g:ActiveLineLeft)
     let ret .= StatuslineMiddle()
