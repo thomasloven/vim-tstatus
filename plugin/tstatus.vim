@@ -123,8 +123,8 @@ let g:tstatus_modeColors = {
       \ 'visblock': [reverse, 16, 13],
       \ }
 let g:tstatus_specColors = {
-      \ 'nerdtree': [[NONE, NONE, 2], [NONE, NONE, 2]],
-      \ 'tagbar': [[NONE, NONE, 2], [NONE, NONE, 3]],
+      \ 'nerdtree': [[NONE, NONE, 2], [NONE, 16, 2]],
+      \ 'tagbar': [[NONE, NONE, 3], [NONE, 16, 2]],
       \ 'quickfix': [NONE, NONE, 3],
       \ 'gundolist': [NONE, NONE, 3],
       \ 'gundoprev': [NONE, NONE, 3]
@@ -204,7 +204,10 @@ function! SpecialLine(bufnum, active) "{{{
     let ret = '%#'. s:CreateColor(g:tstatus_specColors['nerdtree'][a:active]). '#'
     let ret .= substitute(nerdroot, ".*/", "", "")
   endif
-
+  if ftype == "tagbar"
+    let ret = '%#'. s:CreateColor(g:tstatus_specColors['tagbar'][a:active]). '#'
+    let ret .= '%=[TAGBAR]'
+  endif
   return ret
 endfunction "}}}
 
