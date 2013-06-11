@@ -122,13 +122,6 @@ let g:tstatus_modeColors = {
      \ 'visline': [reverse, 16, 4],
       \ 'visblock': [reverse, 16, 13],
       \ }
-let g:tstatus_specColors = {
-      \ 'nerdtree': [[NONE, NONE, 2], [NONE, 16, 2]],
-      \ 'tagbar': [[NONE, NONE, 3], [NONE, 16, 2]],
-      \ 'quickfix': [NONE, NONE, 3],
-      \ 'gundolist': [NONE, NONE, 3],
-      \ 'gundoprev': [NONE, NONE, 3]
-      \ }
 " }}}
 
 function! s:CreateColor(color) "{{{
@@ -194,18 +187,29 @@ function! ParseGit(bufnum, segment) "{{{
 endfunction "}}}
 
 function! SpecialLine(bufnum, active) "{{{
+  let NONE = 'NONE'
+  let reverse = 'reverse'
   let ftype = getwinvar(a:bufnum, "&ft")
   let bname = bufname(winbufnr(a:bufnum))
 
   let ret = ''
 
   if ftype == "nerdtree"
+    let colorActive = [NONE, 16, 2]
+    let colInActive = [NONE, NONE, 2]
+    let color = [colInActive, colorActive]
+    let ret = '%#'. s:CreateColor(color[a:active]). '#'
+
     let nerdroot = getbufvar(winbufnr(a:bufnum), "NERDTreeRoot").path.str()
-    let ret = '%#'. s:CreateColor(g:tstatus_specColors['nerdtree'][a:active]). '#'
     let ret .= substitute(nerdroot, ".*/", "", "")
   endif
+
   if ftype == "tagbar"
-    let ret = '%#'. s:CreateColor(g:tstatus_specColors['tagbar'][a:active]). '#'
+    let colorActive = [NONE, 16, 2]
+    let colInActive = [NONE, NONE, 3]
+    let color = [colInActive, colorActive]
+    let ret = '%#'. s:CreateColor(color[a:active]). '#'
+
     let ret .= '%=[TAGBAR]'
   endif
   return ret
