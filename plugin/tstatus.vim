@@ -292,7 +292,10 @@ endfunction "}}}
 function! s:Startup()
   augroup tstatus
     au!
-    au  BufEnter,BufLeave,BufUnLoad,CmdWinEnter,CmdWinLeave,WinEnter,WinLeave,Filetype * call UpdateStatusLines()
+    au  BufEnter,BufLeave * call UpdateStatusLines()
+    au BufUnLoad,Filetype * call UpdateStatusLines()
+    au CmdWinEnter,CmdWinLeave * call UpdateStatusLines()
+    au WinEnter,WinLeave * call UpdateStatusLines()
   augroup END
   call UpdateStatusLines()
 endfunction
