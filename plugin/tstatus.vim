@@ -162,7 +162,7 @@ function! ParseGit(bufnum, segment) "{{{
   let ret = ''
   let fpath = fnamemodify(bufname(winbufnr(a:bufnum)),":p:h")
 
-  let gitref = system("cd ". fpath. "; git symbolic-ref HEAD 2> /dev/null")
+  let gitref = system("cd '". fpath. "'; git symbolic-ref HEAD 2> /dev/null")
   let gitref = substitute(gitref, "refs/heads/", "", "")
   let gitref = substitute(gitref, "\n", "", "")
 
