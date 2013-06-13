@@ -9,82 +9,6 @@ endif
 
 let g:tstatus_loaded = 1
 
-" Old functions for reference
-function! MakeInactiveStatusLine(num) "{{{
-  let filet = getwinvar(a:num, "&ft")
-  let buname = bufname(winbufnr(a:num))
-  if filet == "nerdtree"
-    let statLine = getbufvar(winbufnr(a:num), "NERDTreeRoot").path.str()
-    return statLine
-  elseif filet == "tagbar"
-    return '[TagBar]'
-  elseif filet == "qf"
-    return '[Quickfix list]'
-  elseif filet == "gundo"
-    return '[Gundo]'
-  endif
-  if buname == "__Gundo_Preview__"
-    return '[Gundo preview]'
-  endif
-  let statLine = '%n: %<%f%m%r%=%y %p%% (%l:%c)'
-  return statLine
-endfunction "}}}
-
-function! MakeActiveStatusLine() "{{{
-  let filet = &ft
-  let buname = bufname(winbufnr(winnr()))
-  if filet == "nerdtree"
-    return b:NERDTreeRoot.path.str()
-  elseif filet == "tagbar"
-    return '[TagBar]'
-  elseif filet == "qf"
-    return '[Quickfix list]'
-  elseif filet == "gundo"
-    return '[Gundo]'
-  endif
-  if buname == "__Gundo_Preview__"
-    return '[Gundo preview]'
-  endif
-  let statLine = ''
-  let statLine = statLine . '%#StatLineText#%n:'
-  let statLine = statLine . '%#StatLinePaste#%{&paste?"[PASTE]":""}%#StatLineText#'
-  
-  if strlen(fugitive#head())
-    let statLine = statLine . '%#StatLineText#['
-    if strlen(system("git status -s --ignore-submodules=dirty 2>/dev/null"))
-      let statLine = statLine . '%#StatLineGitDirty#'
-    else
-      let statLine = statLine . '%#StatLineGitClean#'
-    endif
-    let statLine = statLine . '%{fugitive#head()}%#StatLineText#]'
-  endif
-
-  let statLine = statLine . '%#StatLineFN#%< %f'
-  let statLine = statLine . '%m%r '
-
-  " Add mode coloring here!
-  let mode = mode()
-  if mode ==? 'i'
-    let statLine = statLine . '%#StatLineHLInsert# Insert'
-  elseif mode ==# 'v'
-    let statLine = statLine .'%#StatLineHLV# Visual'
-  elseif mode ==# 'V'
-    let statLine = statLine .'%#StatLineHLVLine# Visual line'
-  elseif mode ==# ''
-    let statLine = statLine .'%#StatLineHLVBlock# Visual block'
-  elseif mode ==# 'R'
-    let statLine = statLine .'%#StatLineHLReplace# Replace'
-  endif
-
-  let statLine = statLine . '%='
-  if strlen(&filetype)
-    let statLine = statLine . '%#StatLineText# %y'
-  endif
-  let statLine = statLine . ' %#StatLinePos#%p%% (%l:%c)'
-  return statLine
-endfunction "}}}
-
-
 
 let NONE = 'NONE'
 let reverse = 'reverse'
@@ -239,6 +163,15 @@ function! SpecialLine(bufnum, active) "{{{
     let ret .= '[Gundo preview]'
   endif
 
+  if ftype == "help"
+    let colorActive = [NONE, 16, 2]
+    let colInActive = [NONE, NONE, 3]
+    let color = [colInActive, colorActive]
+    let ret = '%#'. s:CreateColor(color[a:active]). '#'
+
+    let ret .= '[HELP] %f'
+  endif
+
   return ret
 endfunction "}}}
 
@@ -359,7 +292,10 @@ endfunction "}}}
 function! s:Startup()
   augroup tstatus
     au!
-    au  BufEnter,BufLeave,BufUnLoad,CmdWinEnter,CmdWinLeave,WinEnter,WinLeave,Filetype * call UpdateStatusLines()
+    au  BufEnter,BufLeave * call UpdateStatusLines()
+    au BufUnLoad,Filetype * call UpdateStatusLines()
+    au CmdWinEnter,CmdWinLeave * call UpdateStatusLines()
+    au WinEnter,WinLeave * call UpdateStatusLines()
   augroup END
   call UpdateStatusLines()
 endfunction
