@@ -57,19 +57,11 @@ function! s:CreateColor(color) "{{{
   if ! hlexists(hi_name)
     let command = printf('hi %s', hi_name)
 
-    if len(type) > 0 
-      let command = command . printf(' cterm=%s', type)
-    else
-      let command = command . ' cterm=NONE'
-    endif
+    let command = command . printf(' cterm=%s', type)
 
-    if len(bg) > 0
-      let command = command . printf(' ctermbg=%s', bg)
-    endif
+    let command = command . printf(' ctermbg=%s', bg)
 
-    if len(fg) > 0
-      let command = command . printf(' ctermfg=%s', fg)
-    endif
+    let command = command . printf(' ctermfg=%s', fg)
 
     execute command
   endif
@@ -290,6 +282,7 @@ function! UpdateStatusLines() " {{{
 endfunction "}}}
 
 function! s:Startup()
+  let g:tstatus_colors = []
   augroup tstatus
     au!
     au  BufEnter,BufLeave * call UpdateStatusLines()
