@@ -296,6 +296,7 @@ function! s:Startup()
     au BufUnLoad,Filetype * call UpdateStatusLines()
     au CmdWinEnter,CmdWinLeave * call UpdateStatusLines()
     au WinEnter,WinLeave * call UpdateStatusLines()
+    au colorscheme * Trepaint
   augroup END
   call UpdateStatusLines()
   command Trepaint call s:RemakeColors()
