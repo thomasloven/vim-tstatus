@@ -69,6 +69,14 @@ function! s:CreateColor(color) "{{{
 
 endfunction "}}}
 
+function! s:RemakeColors() "{{{
+  let colors = items(g:tstatus_colors)
+  for i in range(0, len(colors)-1)
+    let command = printf('hi %s %s', colors[i][0], colors[i][1])
+    execute command
+  endfor
+endfunction "}}}
+
 function! ParseGit(bufnum, segment) "{{{
   " If on a git branch
   " print [branchname]
@@ -290,6 +298,7 @@ function! s:Startup()
     au WinEnter,WinLeave * call UpdateStatusLines()
   augroup END
   call UpdateStatusLines()
+  command Trepaint call s:RemakeColors()
 endfunction
 
 augroup tstatus_load
