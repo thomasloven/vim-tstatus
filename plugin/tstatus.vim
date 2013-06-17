@@ -55,14 +55,13 @@ function! s:CreateColor(color) "{{{
   let hi_name = printf('tstatus_%s%s%s', type, bg, fg)
 
   if ! hlexists(hi_name)
-    let command = printf('hi %s', hi_name)
 
-    let command = command . printf(' cterm=%s', type)
+    let hi_data = printf('cterm=%s', type)
+    let hi_data = hi_data . printf(' ctermbg=%s', bg)
+    let hi_data = hi_data . printf(' ctermfg=%s', fg)
 
-    let command = command . printf(' ctermbg=%s', bg)
-
-    let command = command . printf(' ctermfg=%s', fg)
-
+    let g:tstatus_colors[hi_name] = hi_data
+    let command = printf('hi %s %s', hi_name, hi_data)
     execute command
   endif
 
@@ -282,7 +281,7 @@ function! UpdateStatusLines() " {{{
 endfunction "}}}
 
 function! s:Startup()
-  let g:tstatus_colors = []
+  let g:tstatus_colors = {}
   augroup tstatus
     au!
     au  BufEnter,BufLeave * call UpdateStatusLines()
