@@ -16,7 +16,7 @@ let reverse = 'reverse'
 let g:ActiveLineLeft = [
       \ ['num', [NONE, 16, NONE] ,[]],
       \ ['filename', [NONE, 16, 2], []],
-      \ ['statusflags', [NONE, 16, NONE], [[NONE, 16, 2], '+', [NONE, 16, 1], '-']]
+      \ ['statusflags', [NONE, 16, NONE], [[NONE, 16, 1], '+', [NONE, 16, 1], '-']]
       \ ]
 let g:ActiveLineRight = [
       \ ['filetype', [NONE, 16, NONE], []],
@@ -27,7 +27,8 @@ let g:ActiveLineRight = [
 
 let g:InactiveLineLeft = [
       \ ['num', [NONE, NONE, 3], []],
-      \ ['filename', [NONE, NONE, 3], []]
+      \ ['filename', [NONE, NONE, 3], []],
+      \ ['statusflags', [NONE, NONE, NONE], [[NONE, NONE, 1], '+', [NONE, NONE, 1], '+']]
       \]
 let g:InactiveLineRight = [
       \ ['git', [NONE, NONE, 3], [[NONE, NONE, 2],[NONE, NONE, 1]]]
@@ -80,7 +81,7 @@ function! ParseGit(bufnum, segment) "{{{
   " If on a git branch
   " print [branchname]
   " with branchname colored depending on git status
-
+  return '[git]'
   let ret = ''
   let fpath = fnamemodify(bufname(winbufnr(a:bufnum)),":p:h")
 
@@ -242,11 +243,20 @@ function! StatuslineMiddle() "{{{
   if mode ==? 'i'
     let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['insert']). '# Insert'
   elseif mode ==# 'v'
-    let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['visual']). '# Visual'
+    let clr = s:CreateColor(g:tstatus_modeColors['visual'])
+    let ret .= '%#'. clr. '# Visual'
+    hi Visual NONE
+    execute printf('hi link Visual %s', clr)
   elseif mode ==# 'V'
-    let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['visline']). '# Visual line'
+    let clr = s:CreateColor(g:tstatus_modeColors['visline'])
+    let ret .= '%#'. clr. '# Visual'
+    hi Visual NONE
+    execute printf('hi link Visual %s', clr)
   elseif mode ==# ''
-    let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['visblock']). '# Visual block'
+    let clr = s:CreateColor(g:tstatus_modeColors['visblock'])
+    let ret .= '%#'. clr. '# Visual'
+    hi Visual NONE
+    execute printf('hi link Visual %s', clr)
   elseif mode ==# 'R'
     let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['replace']). '# Replace'
   else
