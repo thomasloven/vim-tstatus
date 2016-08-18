@@ -81,7 +81,6 @@ function! ParseGit(bufnum, segment) "{{{
   " If on a git branch
   " print [branchname]
   " with branchname colored depending on git status
-  return '[git]'
   let ret = ''
   let fpath = fnamemodify(bufname(winbufnr(a:bufnum)),":p:h")
 
@@ -196,7 +195,7 @@ function! ParseLine(bufnum, line) "{{{
     elseif name == 'filename'
       " Filename
       let ret .= '%< %f'
-    
+
     elseif name == 'modified'
       " Modified flag
         let ret .= '%m'
@@ -247,18 +246,18 @@ function! StatuslineMiddle() "{{{
   elseif mode ==# 'v'
     let clr = s:CreateColor(g:tstatus_modeColors['visual'])
     let ret .= '%#'. clr. '# Visual'
-    hi Visual NONE
-    execute printf('hi link Visual %s', clr)
+    execute printf('hi! link Visual %s', clr)
+    redraw
   elseif mode ==# 'V'
     let clr = s:CreateColor(g:tstatus_modeColors['visline'])
     let ret .= '%#'. clr. '# Visual'
-    hi Visual NONE
-    execute printf('hi link Visual %s', clr)
+    execute printf('hi! link Visual %s', clr)
+    redraw
   elseif mode ==# ''
     let clr = s:CreateColor(g:tstatus_modeColors['visblock'])
     let ret .= '%#'. clr. '# Visual'
-    hi Visual NONE
-    execute printf('hi link Visual %s', clr)
+    execute printf('hi! link Visual %s', clr)
+    redraw
   elseif mode ==# 'R'
     let ret .= '%#'. s:CreateColor(g:tstatus_modeColors['replace']). '# Replace'
   else
